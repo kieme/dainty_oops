@@ -157,7 +157,13 @@ namespace oops
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  template<p_what W = default_what, class I = t_id, class C = t_ctxt<> >
+#ifndef DAINTY_OOPS_CTXT
+  #define DAINTY_OOPS_CTXT t_ctxt<>
+#else
+  #include "dainty_oops_user.h"
+#endif
+
+  template<p_what W = default_what, class I = t_id, class C = DAINTY_OOPS_CTXT>
   class t_oops {
   public:
     using t_ctxt       = C;
