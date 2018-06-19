@@ -230,5 +230,11 @@ int main()
     }
   }
 
+  {
+    err_obj err(nullptr);
+    if (err == oops::INVALID) {
+    }
+  }
+
   return 0;
 }

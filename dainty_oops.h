@@ -137,6 +137,11 @@ namespace dainty
 {
 namespace oops
 {
+  using named::t_validity;
+
+  using named::VALID;
+  using named::INVALID;
+
 ////////////////////////////////////////////////////////////////////////////////
 
   class t_except {
@@ -173,12 +178,13 @@ namespace oops
 
     t_info  clear();
 
-    operator t_bool() const;
-    t_id     id    () const;
-    t_tagid  tag   () const;
-    t_bool   is_set(t_info&) const;
-    p_cstr   what  () const;
-    t_void   print () const;
+    operator t_validity() const;
+    operator t_bool    () const;
+    t_id     id        () const;
+    t_tagid  tag       () const;
+    t_bool   is_set    (t_info&) const;
+    p_cstr   what      () const;
+    t_void   print     () const;
 
     t_bool knows(const t_except&) const;
 
@@ -264,6 +270,12 @@ namespace oops
       if (data_.mem_)
         delete ctxt_;
     }
+  }
+
+  template<p_what W, typename I, typename C>
+  inline
+  t_oops<W,I,C>::operator t_validity() const {
+    return ctxt_ ? VALID : INVALID;
   }
 
   template<p_what W, typename I, typename C>
