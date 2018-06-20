@@ -41,7 +41,7 @@ namespace oops
       case v_category_unrecoverable:
         printf("policy assert unrecoverable oops = %d, %s\n", info.id_,
                def.string_);
-        assert(0);
+        assert_now("oops->default_policy_assert");
         break;
       case v_category_recoverable:
         printf("policy ignore recoverable oops = %d, %s\n", info.id_,

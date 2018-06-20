@@ -130,8 +130,8 @@
 //   DAINTY_OOPS_TRACE  - track and print use path of owner
 //
 
-#include <assert.h>
 #include "dainty_oops_ctxt.h"
+#include "dainty_oops_assert.h"
 
 namespace dainty
 {
@@ -212,18 +212,6 @@ namespace oops
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  enum t_assertions {
-    v_assertions_invalid_context   = 0,
-    v_assertions_unhandled         = 0,
-    v_assertions_already_set       = 0,
-    v_assertions_use_clear         = 0,
-    v_assertions_invalid_info      = 0,
-    v_assertions_cannot_be_cleared = 0,
-    t_assertions_nothing_to_clear  = 0
-  };
-
-////////////////////////////////////////////////////////////////////////////////
-
   template<p_what W, typename I, typename C>
   inline
   t_oops<W,I,C>::t_oops() : ctxt_(new t_ctxt), data_(true, true) {
@@ -233,7 +221,7 @@ namespace oops
   inline
   t_oops<W,I,C>::t_oops(t_ctxt* ctxt) : ctxt_(ctxt), data_(true, false) {
     if (!ctxt_)
-      assert(v_assertions_invalid_context);
+      assert_now("oops->invalid_context");
   }
 
   template<p_what W,  typename I,  typename C>
@@ -272,7 +260,7 @@ namespace oops
     if (data_.owner_) {
       const t_bool on = id();
       if (on)
-        assert(v_assertions_unhandled);
+        assert_now("oops->unhandled");
       if (data_.mem_)
         delete ctxt_;
     }
@@ -334,9 +322,9 @@ namespace oops
 #endif
         ctxt_->set(value, W, data_);
       } else
-        assert(v_assertions_already_set);
+        assert_now("oops->already_set");
     } else
-      assert(v_assertions_use_clear);
+      assert_now("oops->use_clear");
     return *this;
   }
 
@@ -351,9 +339,9 @@ namespace oops
 #endif
         ctxt_->set(info);
       } else
-        assert(v_assertions_already_set);
+        assert_now("oops->already_set");
     } else
-      assert(v_assertions_invalid_info);
+      assert_now("oops->invalid_info");
     return *this;
   }
 
@@ -382,11 +370,11 @@ namespace oops
   inline
   t_info t_oops<W,I,C>::clear() {
     if (!id())
-      assert(t_assertions_nothing_to_clear);
+      assert_now("oops->nothing_to_clear");
 #ifndef DAINTY_OOPS_BASIC
     const t_depth depth = ctxt_->get_depth();
     if (data_.depth_ > depth || (data_.depth_ == depth && !data_.set_))
-      assert(v_assertions_cannot_be_cleared);
+      assert_now("oops->cannot_be_cleared");
     data_.set_ = false;
 #endif
     return ctxt_->clear();
