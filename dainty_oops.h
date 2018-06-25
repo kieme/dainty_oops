@@ -204,7 +204,7 @@ namespace oops
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define DAINTY_OOPS_POSITION    __FILE__, __LINE__
+#define DAINTY_OOPS_POSITION    dainty::oops::p_filename{__FILE__}, __LINE__
 #define DAINTY_OOPS_BLOCK_GUARD(oops)             \
   (!oops.mark_block(DAINTY_OOPS_POSITION))
 #define DAINTY_OOPS_BLOCK_GUARD_TAG(oops, id)     \
@@ -221,7 +221,7 @@ namespace oops
   inline
   t_oops<W,I,C>::t_oops(t_ctxt* ctxt) : ctxt_(ctxt), data_(true, false) {
     if (!ctxt_)
-      assert_now("oops->invalid_context");
+      assert_now(p_cstr{"oops->invalid_context"});
   }
 
   template<p_what W,  typename I,  typename C>
@@ -260,7 +260,7 @@ namespace oops
     if (data_.owner_) {
       const t_bool on = id();
       if (on)
-        assert_now("oops->unhandled");
+        assert_now(p_cstr{"oops->unhandled"});
       if (data_.mem_)
         delete ctxt_;
     }
@@ -322,9 +322,9 @@ namespace oops
 #endif
         ctxt_->set(value, W, data_);
       } else
-        assert_now("oops->already_set");
+        assert_now(p_cstr{"oops->already_set"});
     } else
-      assert_now("oops->use_clear");
+      assert_now(p_cstr{"oops->use_clear"});
     return *this;
   }
 
@@ -339,9 +339,9 @@ namespace oops
 #endif
         ctxt_->set(info);
       } else
-        assert_now("oops->already_set");
+        assert_now(p_cstr{"oops->already_set"});
     } else
-      assert_now("oops->invalid_info");
+      assert_now(p_cstr{"oops->invalid_info"});
     return *this;
   }
 
@@ -370,11 +370,11 @@ namespace oops
   inline
   t_info t_oops<W,I,C>::clear() {
     if (!id())
-      assert_now("oops->nothing_to_clear");
+      assert_now(p_cstr{"oops->nothing_to_clear"});
 #ifndef DAINTY_OOPS_BASIC
     const t_depth depth = ctxt_->get_depth();
     if (data_.depth_ > depth || (data_.depth_ == depth && !data_.set_))
-      assert_now("oops->cannot_be_cleared");
+      assert_now(p_cstr{"oops->cannot_be_cleared"});
     data_.set_ = false;
 #endif
     return ctxt_->clear();

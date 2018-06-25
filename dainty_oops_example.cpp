@@ -37,6 +37,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using namespace dainty;
+using named::p_cstr;
 
 namespace asystem {
   using t_error_context = oops::t_ctxt<>;
@@ -52,9 +53,9 @@ namespace other {
 
   oops::t_def errors_what(oops::t_id id) {
     static const oops::t_def tbl[] = {
-      { oops::v_category_ignore,      "other undefined error", E1 },
-      { oops::v_category_ignore,      "other error 1",         E2 },//E1
-      { oops::v_category_recoverable, "other error 2",         0  } //E2
+      { oops::v_category_ignore,      p_cstr{"other undefined error"}, E1 },
+      { oops::v_category_ignore,      p_cstr{"other error 1"},         E2 },//E1
+      { oops::v_category_recoverable, p_cstr{"other error 2"},         0  } //E2
     };
     return tbl[id <= E2 ? id : 0];
   }
@@ -85,11 +86,11 @@ enum errors {
 
 oops::t_def errors_what(oops::t_id id) {
   static const oops::t_def tbl[] = {
-    { oops::v_category_ignore, "undefined error", E1 },
-    { oops::v_category_ignore, "error 1",         E2 }, //E1
-    { oops::v_category_ignore, "error 2",         E3 }, //E2
-    { oops::v_category_ignore, "error 3",         E4 }, //E3
-    { oops::v_category_ignore, "error 4",         0  }  //E4
+    { oops::v_category_ignore, p_cstr{"undefined error"}, E1 },
+    { oops::v_category_ignore, p_cstr{"error 1"},         E2 }, //E1
+    { oops::v_category_ignore, p_cstr{"error 2"},         E3 }, //E2
+    { oops::v_category_ignore, p_cstr{"error 3"},         E4 }, //E3
+    { oops::v_category_ignore, p_cstr{"error 4"},         0  }  //E4
   };
   return tbl[id <= E4 ? id : 0];
 }

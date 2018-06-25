@@ -49,8 +49,8 @@ namespace oops
   using t_lineno   = named::t_uint16;
   using t_id       = named::t_uint32;
   using t_depth    = named::t_uint16;
-  using p_filename = p_cstr;
   using p_ctxt     = named::p_cvoid;
+  using p_filename = p_cstr;
 
   union t_user {
     typedef t_bool (*p_func1)(t_id);
@@ -132,7 +132,7 @@ namespace oops
     }
 
     inline t_info& reset() {
-      return set(0, 0, 0, 0, 0, 0);
+      return set(0, 0, 0, 0, p_cstr{nullptr}, 0);
     }
 
     p_ctxt     ctxt_;
@@ -213,7 +213,7 @@ namespace oops
   template<p_policy A, p_print P>
   inline
   t_void t_ctxt<A, P>::set(t_id id, p_what what, const t_data1& data) {
-    A(info_.set(id, what, 0, data.tag_, 0, 0));
+    A(info_.set(id, what, 0, data.tag_, p_cstr{nullptr}, 0));
   }
 
   template<p_policy A, p_print P>
@@ -262,7 +262,7 @@ namespace oops
   template<p_policy A, p_print P>
   inline
   p_cstr t_ctxt<A, P>::what() const {
-    return info_.what_ ? "no oops" : info_.what_(info_.id_).string_;
+    return info_.what_ ? p_cstr{"no oops"} : info_.what_(info_.id_).string_;
   }
 
   template<p_policy A, p_print P>

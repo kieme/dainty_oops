@@ -33,7 +33,7 @@ namespace dainty
 namespace oops
 {
   t_void assert_now(p_cstr reason) {
-    printf("assert: %s\n", reason);
+    printf("assert: %s\n", get(reason));
     fflush(stdout);
     assert(0);
   }
