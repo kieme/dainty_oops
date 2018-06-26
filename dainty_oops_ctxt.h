@@ -146,31 +146,44 @@ namespace oops
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  typedef t_void (*p_policy)(const t_info&);
-  typedef t_void (*p_print1)(const t_info&, const t_data1&);
-  typedef t_void (*p_print2)(const t_info&, const t_data2&);
+  using r_data1  = t_data1&;
+  using r_cdata1 = const t_data1&;
+  using r_data2  = t_data2&;
+  using r_cdata2 = const t_data2&;
+  using r_info   = t_info&;
+  using r_cinfo  = const t_info&;
+
+////////////////////////////////////////////////////////////////////////////////
+
+  typedef t_void (*p_policy)(r_cinfo);
+  typedef t_void (*p_print1)(r_cinfo, r_cdata1);
+  typedef t_void (*p_print2)(r_cinfo, r_cdata2);
 
 ////////////////////////////////////////////////////////////////////////////////
 
   t_def  default_what  (t_id);
-  t_void default_policy(const t_info&);
-  t_void default_print (const t_info&, const t_data1&);
-  t_void default_print (const t_info&, const t_data2&);
+  t_void default_policy(r_cinfo);
+  t_void default_print (r_cinfo, r_cdata1);
+  t_void default_print (r_cinfo, r_cdata2);
 
-  t_void trace_step_in  (const t_info&, p_what, p_ctxt, const t_data1&);
-  t_void trace_step_in  (const t_info&, p_what, p_ctxt, const t_data2&);
-  t_void trace_step_out (const t_info&, p_what, p_ctxt, const t_data1&);
-  t_void trace_step_out (const t_info&, p_what, p_ctxt, const t_data2&);
-  t_void trace_step_do  (const t_info&, p_what, p_ctxt, const t_data1&);
-  t_void trace_step_do  (const t_info&, p_what, p_ctxt, const t_data2&);
+  t_void trace_step_in (r_cinfo, p_what, p_ctxt, r_cdata1);
+  t_void trace_step_in (r_cinfo, p_what, p_ctxt, r_cdata2);
+  t_void trace_step_out(r_cinfo, p_what, p_ctxt, r_cdata1);
+  t_void trace_step_out(r_cinfo, p_what, p_ctxt, r_cdata2);
+  t_void trace_step_do (r_cinfo, p_what, p_ctxt, r_cdata1);
+  t_void trace_step_do (r_cinfo, p_what, p_ctxt, r_cdata2);
 
 ////////////////////////////////////////////////////////////////////////////////
 
 #ifdef OOPS_BASIC
   using t_data  = t_data1;
+  using r_data  = r_data1;
+  using r_cdata = r_cdata1;
   using p_print = p_print1;
 #else
   using t_data  = t_data2;
+  using r_data  = r_data2;
+  using r_cdata = r_cdata2;
   using p_print = p_print2;
 #endif
 
@@ -181,9 +194,9 @@ namespace oops
   public:
     t_ctxt();
 
-    void set(t_id, p_what, const t_data2&);
-    void set(t_id, p_what, const t_data1&);
-    void set(const t_info&);
+    void set(t_id, p_what, r_cdata1);
+    void set(t_id, p_what, r_cdata2);
+    void set(r_cinfo);
 
     t_id    get_id   () const;
     t_depth get_depth() const;
@@ -192,12 +205,12 @@ namespace oops
 
     t_info clear();
 
-    void print(const t_data&) const;
+    void print(r_cdata) const;
     p_cstr what() const;
 
-    void step_in (const t_data&, p_what);
-    void step_out(const t_data&, p_what);
-    void step_do (const t_data&, p_what);
+    void step_in (r_cdata, p_what);
+    void step_out(r_cdata, p_what);
+    void step_do (r_cdata, p_what);
 
   private:
     t_info info_;
@@ -212,19 +225,19 @@ namespace oops
 
   template<p_policy A, p_print P>
   inline
-  t_void t_ctxt<A, P>::set(t_id id, p_what what, const t_data1& data) {
+  t_void t_ctxt<A, P>::set(t_id id, p_what what, r_cdata1 data) {
     A(info_.set(id, what, 0, data.tag_, p_cstr{nullptr}, 0));
   }
 
   template<p_policy A, p_print P>
   inline
-  t_void t_ctxt<A, P>::set(t_id id, p_what what, const t_data2& data) {
+  t_void t_ctxt<A, P>::set(t_id id, p_what what, r_cdata2 data) {
     A(info_.set(id, what, data.depth_, data.tag_, data.file_, data.line_));
   }
 
   template<p_policy A, p_print P>
   inline
-  t_void t_ctxt<A, P>::set(const t_info& info) {
+  t_void t_ctxt<A, P>::set(r_cinfo info) {
     info_ = info;
     A(info_);
   }
@@ -255,7 +268,7 @@ namespace oops
 
   template<p_policy A, p_print P>
   inline
-  t_void t_ctxt<A, P>::print(const t_data& data) const {
+  t_void t_ctxt<A, P>::print(r_cdata data) const {
     P(info_, data);
   }
 
@@ -275,19 +288,19 @@ namespace oops
 
   template<p_policy A, p_print P>
   inline
-  t_void t_ctxt<A, P>::step_in(const t_data& data, p_what what) {
+  t_void t_ctxt<A, P>::step_in(r_cdata data, p_what what) {
     trace_step_in(info_, what, this, data);
   }
 
   template<p_policy A, p_print P>
   inline
-  t_void t_ctxt<A, P>::step_out(const t_data& data, p_what what) {
+  t_void t_ctxt<A, P>::step_out(r_cdata data, p_what what) {
     trace_step_out(info_, what, this, data);
   }
 
   template<p_policy A, p_print P>
   inline
-  t_void t_ctxt<A, P>::step_do(const t_data& data, p_what what) {
+  t_void t_ctxt<A, P>::step_do(r_cdata data, p_what what) {
     trace_step_do(info_, what, this, data);
   }
 }

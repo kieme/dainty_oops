@@ -35,7 +35,7 @@ namespace oops
     return t_def(v_category_unrecoverable, p_cstr{"unspecified oops"});
   }
 
-  void default_policy(const t_info& info) {
+  void default_policy(r_cinfo info) {
     t_def def(info.what_(info.id_));
     switch (def.category_) {
       case v_category_unrecoverable:
@@ -52,7 +52,7 @@ namespace oops
     }
   }
 
-  void default_print(const t_info& info, const t_data1& data) {
+  void default_print(r_cinfo info, r_cdata1 data) {
     if (info.what_)
       printf("oops[tag-%d] = %d, %s\n", data.tag_, info.id_,
              get(info.what_(info.id_).string_));
@@ -60,7 +60,7 @@ namespace oops
       printf("oops[tag-%d] = no oops\n", data.tag_);
   }
 
-  void default_print(const t_info& info, const t_data2& data) {
+  void default_print(r_cinfo info, r_cdata2 data) {
     auto data_file = get(data.file_);
     auto info_file = get(info.file_);
     if (info.what_) {
@@ -93,8 +93,8 @@ namespace oops
     }
   }
 
-  void trace_step_in(const t_info& info, p_what what, p_ctxt context,
-                     const t_data1& data) {
+  void trace_step_in(r_cinfo info, p_what what, p_ctxt context,
+                     r_cdata1 data) {
     printf("step_in-> code = %u, data-%p, context = %p\n", info.id_, &data,
            context);
     for (t_id id = what(0).next_; id; ) {
@@ -104,8 +104,8 @@ namespace oops
     }
   }
 
-  void trace_step_in(const t_info& info, p_what what, p_ctxt context,
-                     const t_data2& data) {
+  void trace_step_in(r_cinfo info, p_what what, p_ctxt context,
+                     r_cdata2 data) {
     printf("step_in-> code = %u, data-%p, depth = %d, context = %p\n",
            info.id_, &data, data.depth_, context);
     for (t_id id = what(0).next_; id; ) {
@@ -115,14 +115,14 @@ namespace oops
     }
   }
 
-  void trace_step_out(const t_info& info, p_what what, p_ctxt context,
-                      const t_data1& data) {
+  void trace_step_out(r_cinfo info, p_what what, p_ctxt context,
+                      r_cdata1 data) {
     printf("step_out-> code = %u, data-%p, context = %p\n",
            info.id_, &data, context);
   }
 
-  void trace_step_out(const t_info& info, p_what what, p_ctxt context,
-                      const t_data2& data) {
+  void trace_step_out(r_cinfo info, p_what what, p_ctxt context,
+                      r_cdata2 data) {
     auto data_file = get(data.file_);
     if (data_file)
       printf("step_out-> code = %u, data-%p, depth = %d, context = %p, "
@@ -133,14 +133,14 @@ namespace oops
              info.id_, &data, data.depth_, context);
   }
 
-  void trace_step_do(const t_info& info, p_what what, p_ctxt context,
-                     const t_data1& data) {
+  void trace_step_do(r_cinfo info, p_what what, p_ctxt context,
+                     r_cdata1 data) {
     printf("step_do-> code = %u, data-%p, context = %p\n", info.id_,
            &data, context);
   }
 
-  void trace_step_do(const t_info& info, p_what what, p_ctxt context,
-                     const t_data2& data) {
+  void trace_step_do(r_cinfo info, p_what what, p_ctxt context,
+                     r_cdata2 data) {
     auto data_file = get(data.file_);
     if (data_file)
       printf("step_do-> code = %u, data-%p, depth = %d, context = %p, "

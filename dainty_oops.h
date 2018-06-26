@@ -180,7 +180,7 @@ namespace oops
     t_oops& tag       (t_tagid);
 
     t_oops& operator=(const t_explicitid&);
-    t_oops& operator=(const t_info&);
+    t_oops& operator=(r_cinfo);
 
     t_info  clear();
 
@@ -188,7 +188,7 @@ namespace oops
     operator t_bool    () const;
     t_id     id        () const;
     t_tagid  tag       () const;
-    t_bool   is_set    (t_info&) const;
+    t_bool   is_set    (r_info) const;
     p_cstr   what      () const;
     t_void   print     () const;
 
@@ -292,7 +292,7 @@ namespace oops
 
   template<p_what W, typename I, typename C>
   inline
-  t_bool t_oops<W,I,C>::is_set(t_info& info) const {
+  t_bool t_oops<W,I,C>::is_set(r_info info) const {
     const t_bool on = id();
     if (on)
       info = ctxt_->get_info();
@@ -330,7 +330,7 @@ namespace oops
 
   template<p_what W, typename I, typename C>
   inline
-  t_oops<W,I,C>& t_oops<W,I,C>::operator=(const t_info& info) {
+  t_oops<W,I,C>& t_oops<W,I,C>::operator=(r_cinfo info) {
     if (info.id_ && info.what_) {
       const t_bool on = id();
       if (!on) {
