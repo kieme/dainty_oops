@@ -84,11 +84,11 @@ namespace oops
   struct t_data2 {
     t_data2(t_bool owner, t_bool mem)
       : owner_(owner), mem_(mem), depth_(0), tag_(0),
-        set_(false), line_(0), file_(0) { }
+        set_(false), line_(0), file_(nullptr) { }
 
     t_data2(t_bool owner, t_bool mem, t_depth depth)
       : owner_(owner), mem_(mem), depth_(depth), tag_(0),
-        set_(false), line_(0), file_(0) { }
+        set_(false), line_(0), file_(nullptr) { }
 
     const t_bool  owner_;
     const t_bool  mem_;
