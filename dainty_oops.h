@@ -176,7 +176,7 @@ namespace oops
     t_oops(t_ctxt*);
     ~t_oops();
 
-    t_oops(t_oops&&) = delete;            // explicit
+    //t_oops(t_oops&&); // = delete;
     t_oops& operator=(t_oops&&) = delete; // explicit
 
     t_oops& mark_block(p_filename, t_lineno);
