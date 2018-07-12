@@ -45,33 +45,15 @@ namespace oops
   using named::t_void;
   using named::p_cstr;
 
+  enum  t_user_tag_ { };
+  using t_user = named::t_user<t_user_tag_>;
+
   using t_tagid    = named::t_uint16;
   using t_lineno   = named::t_uint16;
   using t_id       = named::t_uint32;
   using t_depth    = named::t_uint16;
   using p_ctxt     = named::p_cvoid;
   using p_filename = p_cstr;
-
-  union t_user {
-    typedef t_bool (*p_func1)(t_id);
-    typedef t_void (*p_func2)(t_id);
-
-    named::t_uint  uint_;
-    named::t_int   int_;
-    named::p_void  void_;
-    named::p_cvoid cvoid_;
-    p_cstr         str_;
-    p_func1        func1_;
-    p_func2        func2_;
-
-    t_user(named::t_uint  user) : uint_ (user) { }
-    t_user(named::t_int   user) : int_  (user) { }
-    t_user(named::p_void  user) : void_ (user) { }
-    t_user(named::p_cvoid user) : cvoid_(user) { }
-    t_user(p_cstr         user) : str_  (user) { }
-    t_user(p_func1        user) : func1_(user) { }
-    t_user(p_func2        user) : func2_(user) { }
-  };
 
   struct t_data1 {
     t_data1(t_bool owner, t_bool mem) : owner_(owner), mem_(mem), tag_(0) { }
@@ -106,7 +88,7 @@ namespace oops
     t_user     user_;
 
     t_def(t_category category, p_cstr string, t_id next = 0,
-          t_user user = t_user(0))
+          t_user user = t_user{0L})
       : category_(category), string_(string), next_(next), user_(user)
     { }
   };
