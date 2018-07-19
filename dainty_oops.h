@@ -130,17 +130,17 @@
 //   DAINTY_OOPS_TRACE  - track and print use path of owner
 //
 
+#include "dainty_named_assert.h"
 #include "dainty_oops_ctxt.h"
-#include "dainty_oops_assert.h"
 
 namespace dainty
 {
 namespace oops
 {
   using named::t_validity;
-
   using named::VALID;
   using named::INVALID;
+  using named::assert_now;
 
 ////////////////////////////////////////////////////////////////////////////////
 
