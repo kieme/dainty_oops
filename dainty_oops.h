@@ -147,12 +147,12 @@ namespace oops
   class t_except {
   public:
     t_except() : ctxt_(nullptr)            { }
-    t_except(p_ctxt ctxt) : ctxt_(ctxt)    { }
+    t_except(P_void ctxt) : ctxt_(ctxt)    { }
     operator t_bool () const { return ctxt_; }
 
   private:
     template<p_what, class, class> friend class t_oops;
-    p_ctxt ctxt_;
+    P_void ctxt_;
   };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -166,23 +166,24 @@ namespace oops
   template<p_what W = default_what, class I = t_id, class C = DAINTY_OOPS_CTXT>
   class t_oops {
   public:
-    using t_ctxt       = C;
-    using t_explicitid = I;
+    using t_ctxt = typename named::t_prefix<C>::t_;
+    using p_ctxt = typename named::t_prefix<C>::p_;
+    using R_id   = typename named::t_prefix<I>::R_;
 
     t_oops();
     t_oops(const t_oops&);
     template<p_what W1, class I1, class C1>
     t_oops(const t_oops<W1, I1, C1>&);
-    t_oops(t_ctxt*);
+    t_oops(p_ctxt);
     ~t_oops();
 
     t_oops& operator=(t_oops&&) = delete; // explicit
 
-    t_oops& mark_block(p_filename, t_lineno);
+    t_oops& mark_block(P_filename, t_lineno);
     t_oops& tag       (t_tagid);
 
-    t_oops& operator=(const t_explicitid&);
-    t_oops& operator=(r_cinfo);
+    t_oops& operator=(R_id);
+    t_oops& operator=(R_info);
 
     t_info  clear();
 
@@ -191,7 +192,7 @@ namespace oops
     t_id     id        () const;
     t_tagid  tag       () const;
     t_bool   is_set    (r_info) const;
-    p_cstr   what      () const;
+    P_cstr   what      () const;
     t_void   print     () const;
 
     t_bool knows(const t_except&) const;
@@ -200,13 +201,13 @@ namespace oops
     template<p_what, class, class> friend class t_oops;
     t_oops& operator=(const t_oops&); // = delete
 
-    t_ctxt* ctxt_;
-    t_data  data_;
+    p_ctxt ctxt_;
+    t_data data_;
   };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define DAINTY_OOPS_POSITION    dainty::oops::p_filename{__FILE__}, __LINE__
+#define DAINTY_OOPS_POSITION    dainty::oops::P_filename{__FILE__}, __LINE__
 #define DAINTY_OOPS_BLOCK_GUARD(oops)             \
   (!oops.mark_block(DAINTY_OOPS_POSITION))
 #define DAINTY_OOPS_BLOCK_GUARD_TAG(oops, id)     \
@@ -221,9 +222,9 @@ namespace oops
 
   template<p_what W, typename I, typename C>
   inline
-  t_oops<W,I,C>::t_oops(t_ctxt* ctxt) : ctxt_(ctxt), data_(true, false) {
+  t_oops<W,I,C>::t_oops(p_ctxt ctxt) : ctxt_(ctxt), data_(true, false) {
     if (!ctxt_)
-      assert_now(p_cstr{"oops->invalid_context"});
+      assert_now(P_cstr{"oops->invalid_context"});
   }
 
   template<p_what W,  typename I,  typename C>
@@ -262,7 +263,7 @@ namespace oops
     if (data_.owner_) {
       const t_bool on = id();
       if (on)
-        assert_now(p_cstr{"oops->unhandled"});
+        assert_now(P_cstr{"oops->unhandled"});
       if (data_.mem_)
         delete ctxt_;
     }
@@ -303,7 +304,7 @@ namespace oops
 
   template<p_what W, typename I, typename C>
   inline
-  p_cstr t_oops<W,I,C>::what() const {
+  P_cstr t_oops<W,I,C>::what() const {
     return ctxt_->what();
   }
 
@@ -315,7 +316,7 @@ namespace oops
 
   template<p_what W, typename I, typename C>
   inline
-  t_oops<W,I,C>& t_oops<W,I,C>::operator=(const t_explicitid& value) {
+  t_oops<W,I,C>& t_oops<W,I,C>::operator=(R_id value) {
     if (value) {
       const t_bool on = id();
       if (!on) {
@@ -324,15 +325,15 @@ namespace oops
 #endif
         ctxt_->set(value, W, data_);
       } else
-        assert_now(p_cstr{"oops->already_set"});
+        assert_now(P_cstr{"oops->already_set"});
     } else
-      assert_now(p_cstr{"oops->use_clear"});
+      assert_now(P_cstr{"oops->use_clear"});
     return *this;
   }
 
   template<p_what W, typename I, typename C>
   inline
-  t_oops<W,I,C>& t_oops<W,I,C>::operator=(r_cinfo info) {
+  t_oops<W,I,C>& t_oops<W,I,C>::operator=(R_info info) {
     if (info.id_ && info.what_) {
       const t_bool on = id();
       if (!on) {
@@ -341,15 +342,15 @@ namespace oops
 #endif
         ctxt_->set(info);
       } else
-        assert_now(p_cstr{"oops->already_set"});
+        assert_now(P_cstr{"oops->already_set"});
     } else
-      assert_now(p_cstr{"oops->invalid_info"});
+      assert_now(P_cstr{"oops->invalid_info"});
     return *this;
   }
 
   template<p_what W, typename I, typename C>
   inline
-  t_oops<W,I,C>& t_oops<W,I,C>::mark_block(p_filename file, t_lineno line) {
+  t_oops<W,I,C>& t_oops<W,I,C>::mark_block(P_filename file, t_lineno line) {
 #ifndef DAINTY_OOPS_BASIC
     data_.file_ = file;
     data_.line_ = line;
@@ -372,11 +373,11 @@ namespace oops
   inline
   t_info t_oops<W,I,C>::clear() {
     if (!id())
-      assert_now(p_cstr{"oops->nothing_to_clear"});
+      assert_now(P_cstr{"oops->nothing_to_clear"});
 #ifndef DAINTY_OOPS_BASIC
     const t_depth depth = ctxt_->get_depth();
     if (data_.depth_ > depth || (data_.depth_ == depth && !data_.set_))
-      assert_now(p_cstr{"oops->cannot_be_cleared"});
+      assert_now(P_cstr{"oops->cannot_be_cleared"});
     data_.set_ = false;
 #endif
     return ctxt_->clear();
