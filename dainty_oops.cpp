@@ -115,13 +115,13 @@ namespace oops
     }
   }
 
-  void trace_step_out(R_info info, p_what what, P_void context,
+  void trace_step_out(R_info info, p_what, P_void context,
                       R_data1 data) {
     printf("step_out-> code = %u, data-%p, context = %p\n",
            info.id_, &data, context);
   }
 
-  void trace_step_out(R_info info, p_what what, P_void context,
+  void trace_step_out(R_info info, p_what, P_void context,
                       R_data2 data) {
     auto data_file = get(data.file_);
     if (data_file)
@@ -133,14 +133,12 @@ namespace oops
              info.id_, &data, data.depth_, context);
   }
 
-  void trace_step_do(R_info info, p_what what, P_void context,
-                     R_data1 data) {
+  void trace_step_do(R_info info, p_what, P_void context, R_data1 data) {
     printf("step_do-> code = %u, data-%p, context = %p\n", info.id_,
            &data, context);
   }
 
-  void trace_step_do(R_info info, p_what what, P_void context,
-                     R_data2 data) {
+  void trace_step_do(R_info info, p_what, P_void context, R_data2 data) {
     auto data_file = get(data.file_);
     if (data_file)
       printf("step_do-> code = %u, data-%p, depth = %d, context = %p, "
